@@ -1,0 +1,23 @@
+<html>
+    <body>
+        <h3>Read names from js file</h3>
+            <head>
+                <script>  
+                    function populate(){  
+                        var usernames = ["Nick", "Tommy", "Marc", "Mike", "Ryan"];
+                        var selectBox = document.getElementById('userNames');
+                        
+                        for( var i = 0; i < usernames.length; i++){
+                            var option = document.createElement('option');
+                            option.innerHTML = usernames[i];
+                            option.value = usernames[i];
+                            selectBox.appendChild(option);
+                        }
+                    }
+                </script>
+            </head>
+            <select id="userNames"></select>   
+            <button  onclick="populate()">Populate</button>
+    </body>
+</html>
+  
