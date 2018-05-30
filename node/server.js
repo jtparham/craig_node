@@ -9,10 +9,12 @@ var app        = express();                 // define our app using express
 var bodyParser = require('body-parser');
 var mysql = require('mysql');
 var path = require('path');
-// var Person = require('./app/models/people');
-// var Name = require('./app/models/names');
+var cheerio = require('cheerio');
+var request = require('request');
+var fs = require('fs');
 var port = process.env.PORT || 8080;     
 var resultSet;
+
 var con = mysql.createConnection({
     host: "localhost",
     user: "root", 
@@ -24,8 +26,6 @@ con.connect(function(err) {
     if (err) throw err;
     con.query("SELECT * from names ORDER BY usernames", function (err, result, fields) {
       if (err) throw err;
-      
-      console.log("yeet: ", result);
       resultSet = result;
     });
   });
@@ -41,10 +41,16 @@ app.set('view engine', 'ejs');
 // =============================================================================
 var router = express.Router();              // get an instance of the express Router
 
+// REGISTER OUR ROUTES -------------------------------
+// all of our routes will be prefixed with /api
+app.use('/api', router);
+
+//load from a static js file
 app.get('/', function (req, res){
     res.sendfile(__dirname + '/views/index.html');
 });
 
+//make a database call, fill select box
 app.get('/people', function(req, res){
     
     res.render('fillBox.ejs', {
@@ -52,43 +58,33 @@ app.get('/people', function(req, res){
     });
 });
 
-router.use(function(req, res, next) {
-  // do logging
-  console.log('Something is happening at: ', req);
-  next(); // make sure we go to the next routes and don't stop here
+//scrape webpage
+app.get('/scrape', function(req, res){
+    var url = "http://localhost:8080/";
+    request(url, function(error, response, html){
+        if(!error)
+        {
+            var $ = cheerio.load(html);
+            var names;
+
+
+            $('#usernames').filter(function(){
+                var data = $(this);
+                names = data.children().first().text();
+                console.log("current name: " + names);
+            });
+
+            res.render('scraper.ejs', {
+                resultSet : names
+            });
+        }
+
+        else{
+            console.log(error);
+        }
+    });
 });
 
-// test route to make sure everything is working (accessed at GET http://localhost:8080/api)
-router.get('/', function(req, res) {
-    res.json({ message: 'Yeet' });   
-});
-
-router.route('/people')
-
-    // create a person (accessed at POST http://localhost:8080/api/people)
-    .post(function(req, res) {
-
-        var person = new Person();      // create a new instance of the Person model
-        person.name = req.body.name;  // set the person's name (comes from the request)
-
-        // save the person and check for errors
-        person.save(function(err) {
-            if (err)
-                res.send(err);
-
-            res.json({ message: 'Person created!' });
-        });
-
-    })
-        // get all the names (accessed at GET http://localhost:8080/api/people)
-        .get(function(req, res) {
-            res.render('js/fillBox')
-        });
-
-
-// REGISTER OUR ROUTES -------------------------------
-// all of our routes will be prefixed with /api
-app.use('/api', router);
 
 // START THE SERVER
 // =============================================================================
