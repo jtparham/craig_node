@@ -9,13 +9,10 @@ var app        = express();                 // define our app using express
 var bodyParser = require('body-parser');
 var mysql = require('mysql');
 var path = require('path');
-
-app.use(express.static('node'));
-
-//app.use('/js', express.static('html'));
-app.use('/js', express.static(path.join(__dirname, '/js')));
-
-
+// var Person = require('./app/models/people');
+// var Name = require('./app/models/names');
+var port = process.env.PORT || 8080;     
+var resultSet;
 var con = mysql.createConnection({
     host: "localhost",
     user: "root", 
@@ -23,21 +20,36 @@ var con = mysql.createConnection({
     database: "people"
   });
 
-// configure app to use bodyParser()
-// this will let us get the data from a POST
+con.connect(function(err) {
+    if (err) throw err;
+    con.query("SELECT * from names ORDER BY usernames", function (err, result, fields) {
+      if (err) throw err;
+      
+      console.log("yeet: ", result);
+      resultSet = result;
+    });
+  });
+
+app.use(express.static('node'));
+app.use('/js', express.static(path.join(__dirname, '/js')));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.set('view engine', 'ejs');
 
-var port = process.env.PORT || 8080;        // set our port
 
-var Person = require('./app/models/people');
-var Name = require('./app/models/names');
 // ROUTES FOR OUR API
 // =============================================================================
 var router = express.Router();              // get an instance of the express Router
 
 app.get('/', function (req, res){
-    res.sendfile(__dirname + '/html/index.html');
+    res.sendfile(__dirname + '/views/index.html');
+});
+
+app.get('/people', function(req, res){
+    
+    res.render('fillBox.ejs', {
+        resultSet: resultSet
+    });
 });
 
 router.use(function(req, res, next) {
@@ -70,7 +82,7 @@ router.route('/people')
     })
         // get all the names (accessed at GET http://localhost:8080/api/people)
         .get(function(req, res) {
-            res.sendfile(__dirname + '/html/fillBox.html')
+            res.render('js/fillBox')
         });
 
 
