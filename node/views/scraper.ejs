@@ -5,7 +5,7 @@
                 <h3>Fill select box using Node database call and Server side rendering through EJS</h3>
                 <select id="userNames">
                         <% resultSet.forEach(function(result) { %>
-                            <option><%= result.usernames %> </option>
+                            <option><%= result %> </option>
                         <% }); %>
                 </select>
             </main>

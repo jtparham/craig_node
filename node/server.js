@@ -10,6 +10,7 @@ var bodyParser = require('body-parser');
 var mysql = require('mysql');
 var path = require('path');
 var cheerio = require('cheerio');
+var http = require('http');
 var request = require('request');
 var fs = require('fs');
 var port = process.env.PORT || 8080;     
@@ -60,29 +61,29 @@ app.get('/people', function(req, res){
 
 //scrape webpage
 app.get('/scrape', function(req, res){
-    var url = "http://localhost:8080/";
-    request(url, function(error, response, html){
-        if(!error)
-        {
-            var $ = cheerio.load(html);
-            var names;
-
-
-            $('#usernames').filter(function(){
-                var data = $(this);
-                names = data.children().first().text();
-                console.log("current name: " + names);
-            });
-
-            res.render('scraper.ejs', {
-                resultSet : names
-            });
-        }
-
-        else{
-            console.log(error);
-        }
-    });
+ 
+        var url = 'http://localhost:8080/people';
+            request(url, function (error, response, html){
+                if(!error){
+                var $ = cheerio.load(html);
+                var names = [];
+                
+                console.log("html content: " + html);
+                $('option').filter(function(){
+                    var data = $(this);
+                    console.log("contents of data: " + data);
+                   for(var i = 0; i < data.length; i++){
+                        names.push(data.eq(i).text())
+                   }                   
+                    
+                });
+                console.log("content of names: " + names);
+                res.render('scraper.ejs', {
+                    resultSet : names
+                });
+            }
+             
+        });
 });
 
 
