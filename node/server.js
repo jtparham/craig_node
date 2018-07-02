@@ -2,16 +2,15 @@
 * Purpose: Start the server for Node.
 * Date: 5/19/2018
 * Author: Judah Parham
-* Credits: W3Schools
+* Credits: W3Schools, Scotch.io, StackOverflow
 */
-var express    = require('express');        // call express
-var app        = express();                 // define our app using express
+var express    = require('express');    
+var app        = express();                 
 var bodyParser = require('body-parser');
 var mysql = require('mysql');
 var path = require('path');
 var cheerio = require('cheerio');
 var request = require('request');
-var fs = require('fs');
 var port = process.env.PORT || 8080;     
 var resultSet;
 
@@ -37,20 +36,19 @@ app.use(bodyParser.json());
 app.set('view engine', 'ejs');
 
 
-// ROUTES FOR OUR API
 // =============================================================================
-var router = express.Router();              // get an instance of the express Router
+var router = express.Router();  
 
-// REGISTER OUR ROUTES -------------------------------
-// all of our routes will be prefixed with /api
+
+// i
 app.use('/api', router);
 
-//load from a static js file
+//PART I: load from a static js file
 app.get('/', function (req, res){
     res.sendfile(__dirname + '/views/index.html');
 });
 
-//make a database call, fill select box
+//PART II: make a database call, fill select box
 app.get('/people', function(req, res){
     
     res.render('fillBox.ejs', {
@@ -58,35 +56,49 @@ app.get('/people', function(req, res){
     });
 });
 
-//scrape webpage
+//PART III: scrape webpage
 app.get('/scrape', function(req, res){
-    var url = "http://localhost:8080/";
-    request(url, function(error, response, html){
-        if(!error)
-        {
-            var $ = cheerio.load(html);
-            var names;
+ 
+        var url = 'http://localhost:8080/people';
+            request(url, function (error, response, html){
+                if(!error){
+                var $ = cheerio.load(html);
+                var names = [];
+                
+                console.log("html content: " + html);
+                $('option').filter(function(){
+                    var data = $(this);
+                    
+                   for(var i = 0; i < data.length; i++){
+                        names.push(data.eq(i).text())
+                   }                   
+                    
+                });
 
+                res.render('scraper.ejs', {
+                    resultSet : names
+                });
+            }
+             
+        });
+});
 
-            $('#usernames').filter(function(){
-                var data = $(this);
-                names = data.children().first().text();
-                console.log("current name: " + names);
-            });
+//PART IV: Create a web app that allows you to change the 5 names in the database dynamically via a rest call
+app.get('/addName', function(req, res, next){
+    res.sendfile(__dirname + "/views/addName.html");
+});
 
-            res.render('scraper.ejs', {
-                resultSet : names
-            });
-        }
-
-        else{
-            console.log(error);
-        }
+app.post('/rest', function(req, res){
+    con.query("INSERT INTO `names` (`usernames`) VALUES ('"+req.body.data+"')",
+    function(err, result){
+        if(err)
+            throw err;
     });
+
+    res.sendfile(__dirname + "/views/index.html");
 });
 
 
 // START THE SERVER
 // =============================================================================
 app.listen(port);
-console.log('Port: ' + port);
