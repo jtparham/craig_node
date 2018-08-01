@@ -1,0 +1,24 @@
+{
+  "name": "assignment_two",
+  "version": "1.0.0",
+  "description": "Assignment to familiarize myself with Node and express.",
+  "main": "server.js",
+  "dependencies": {
+    "angular": "^1.7.2",
+    "body-parser": "^1.18.3",
+    "express": "^4.16.3",
+    "inherits": "^2.0.3",
+    "mysql": "^2.16.0",
+    "path": "^0.12.7",
+    "readable-stream": "^2.3.6",
+    "request": "^2.87.0",
+    "safe-buffer": "^5.1.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "node",
+    "start": "node server.js"
+  },
+  "author": "Judah Parham",
+  "license": "ISC"
+}

@@ -1,0 +1,55 @@
+<!-- 
+ * Purpose: Insert items into a database based off of a 
+ * rest call and the form data attached to it.
+ * 
+ * Date: 2/17/2018
+ * Author: Judah Parham
+ * Credits: Stack overflow
+  -->
+<!DOCTYPE html>
+<html lang="en">
+    <h3> CRUD Rest Functions</h3>
+<head>
+        <script src="../js/rest.js"></script>
+</head>
+<body>
+
+<!-- Read from database -->
+    <input type="button" onclick="window.location.href='http://localhost/assignment/php/query.php'" value="Read From Database"></input>
+        
+
+    <!-- Add name to database -->
+    <form action="http://localhost/assignment/php/create.php" method="POST">
+
+        <label>Name to be added: </label>
+        <input type="text" name="newName"></input>
+        <button type="submit">Add New Name</button>
+    </form>
+
+    <br>
+
+    <!-- Remove name from database -->
+    <form action="http://localhost/assignment/php/delete.php" method="POST">
+
+        <label>To be deleted: </label>
+        <input type="text" name="target"></input>
+        <button type="submit">Delete Name</button>
+    </form>
+
+    <br>
+
+    <!-- Update name in database -->
+    <form action="http://localhost/assignment/php/update.php" method="POST">
+
+        <label>Original Name</label>
+        <input type="text" name="from"></input>
+        
+        <label>Changed Name</label>
+        <input type="text" name="to"></input>
+        
+        <button type="submit">Update Name</button>
+    </form>
+
+</body>
+
+</html>

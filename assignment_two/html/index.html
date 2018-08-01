@@ -1,0 +1,26 @@
+<!-- 
+ * Purpose: Display names statically stored in a JS file.
+ * 
+ * Date: 7/19/2018
+ * Author: Judah Parham
+ * Credits: Stack overflow
+-->
+  <!DOCTYPE html>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.js"></script>
+  <script src="../js/staticAnimals.js"></script>
+  <html>
+          <h3>List animals from static JS file</h3>
+              <head>
+                
+              </head>
+              <body>
+                <div ng-app="zooApp">
+                    <div ng-controller="animalController">
+                        <select ng-model="selectedItem" ng-change="updateDescription()" ng-options="animal.name for animal in zoo"></select>
+
+                        <textarea rows="8" cols="65" ng-model="selectedItemDescription" disabled id="description" value="{{description}}"></textarea>
+                    </div>
+                </div>  
+      </body>
+  </html>
+  
