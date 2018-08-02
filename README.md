@@ -4,7 +4,7 @@ any Database/Server application
 #Usage
 1) Once this folder has been cloned into a directory, open a command prompt and switch to /assignment_two.
 
-2) Import zoo.sql into a mysql database.
+2) Import people.sql into a mysql database.
 
 3) type 'npm install' and then 'npm start'.
 
