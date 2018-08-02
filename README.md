@@ -1,13 +1,17 @@
 #Required
-XAMPP or any other Database/Server application 
+any Database/Server application 
 
 #Usage
-On starting your database and server connection, visit the different urls on localhost.
+1) Once this folder has been cloned into a directory, open a command prompt and switch to /assignment_two.
 
-  For part one of the assignment, visit http://localhost:8080/ 
+2) Import zoo.sql into a mysql database.
+
+3) type 'npm install' and then 'npm start'.
+
+4) With your MySql server running and a browser open, visit http://localhost:3000/
+
+  For part one of the assignment, visit http://localhost:3000/ 
   
-  For part two of the assignment, visit http://localhost:8080/people
+  For part two of the assignment, visit http://localhost:3000/<number between 1-10>
   
-  For part three of the assignment, visit http://localhost:8080/scrape
-  
-  For part four of the assignment, visit http://localhost:8080/addName
+  For part three of the assignment, visit http://localhost:3000/part_three
